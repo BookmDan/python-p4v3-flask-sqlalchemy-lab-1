@@ -3,7 +3,6 @@
 
 from flask import Flask, make_response
 from flask_migrate import Migrate
-
 from models import db, Earthquake
 
 app = Flask(__name__)
@@ -21,7 +20,13 @@ def index():
     return make_response(body, 200)
 
 # Add views here
-
+@app.route('/earthquakes/<int:id>', methods= ['GET'])
+def get_eartquake(id):
+    earthquake = Earthquake.query.get(id)
+    if earthquake:
+        return jsonify(earthquake.serialize()), 200
+    else:
+        return jsonify({"message": f"Earthquake {id} not found."}), 404
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
